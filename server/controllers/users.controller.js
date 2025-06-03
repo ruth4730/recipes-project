@@ -1,6 +1,6 @@
 import User, { generateToken, JoiUserSchema } from '../models/user.model.js'
 import bcrypt from 'bcryptjs';
-import {sendWelcomeEmail, sendPasswordChangeNotification} from '../services/email.service.js'
+import { sendWelcomeEmail, sendPasswordChangeNotification, sendDeleteUser } from '../services/email.service.js'
 export const getAllUsers = async (req, res, next) => {
     try {
         const users = await User.find();
@@ -53,7 +53,7 @@ export const newPassword = async (req, res, next) => {
     try {
         const { id } = req.params;
         const { password } = req.body;
-        if (req.user._id !== id) {
+        if (req.myUser._id !== id) {
             return next({ status: 403, message: 'no permission' });
         }
         if (JoiUserSchema.login.extract('password').validate(password).error) {
@@ -67,6 +67,23 @@ export const newPassword = async (req, res, next) => {
         await user.save();
         try {
             sendPasswordChangeNotification(user.email, user.username);
+        } catch (err) {
+            console.error('Email notification failed:', err);
+        }
+        res.status(204).end();
+    } catch (error) {
+        next({ message: error.message });
+    }
+}
+export const deleteUser = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        if (req.myUser._id !== id) {
+            return next({ status: 403, message: 'No access permission' });
+        }
+        await User.findByIdAndDelete(id);
+        try {
+            sendDeleteUser(user.email, user.username);
         } catch (err) {
             console.error('Email notification failed:', err);
         }

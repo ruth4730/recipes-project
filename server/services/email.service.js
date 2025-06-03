@@ -37,3 +37,21 @@ export const sendWelcomeEmail = async (userEmail, username) => {
         return { success: false, error: error.message };
     }
 };
+export const sendDeleteUser = async (userEmail, userName) => {
+    const template = emailTemplates.delete;
+    const mailOptions = {
+        from: emailDefaults.from,
+        to: userEmail,
+        subject: template.subject,
+        html: template.getHtml(userName)
+    };
+    try {
+        await transporter.sendMail(mailOptions);
+        console.log(`user has delete to ${userEmail}`);
+        return { success: true };
+    } catch (error) {
+        console.error('Failed to send deleted notification:', error);
+        return { success: false, error: error.message };
+    }
+
+}

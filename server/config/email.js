@@ -72,5 +72,14 @@ export const emailTemplates = {
         <p>You can now start using all our features.</p>
       </div>
     `
+  },
+  delete: {
+    subject: 'You have been deleted from our user database.',
+    getHtml: (username) => `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #4caf50;">Welcome ${username}!</h2>
+        <p>You have been deleted from our user database.</p>
+      </div>
+    `
   }
 };

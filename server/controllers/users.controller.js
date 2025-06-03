@@ -1,5 +1,6 @@
 import User, { generateToken, JoiUserSchema } from '../models/user.model.js'
 import bcrypt from 'bcryptjs';
+import {sendWelcomeEmail, sendPasswordChangeNotification} from '../services/email.service.js'
 export const getAllUsers = async (req, res, next) => {
     try {
         const users = await User.find();

@@ -1,4 +1,6 @@
-import nodemailer from 'nodemailer'
+import nodemailer from 'nodemailer';
+import { config } from 'dotenv';
+config();
 const emailConfigs = {
     gmail: {
         service: 'gmail',

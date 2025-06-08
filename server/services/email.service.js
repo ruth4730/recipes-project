@@ -1,4 +1,4 @@
-import { createEmailTransporter, emailDefaults, emailTemplates } from "../server/config/email";
+import { createEmailTransporter, emailDefaults, emailTemplates } from "../config/email.js";
 const transporter = createEmailTransporter();
 export const sendPasswordChangeNotification = async (userEmail, userName) => {
     const template = emailTemplates.passwordChange;

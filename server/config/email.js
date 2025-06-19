@@ -2,36 +2,36 @@ import nodemailer from 'nodemailer';
 import { config } from 'dotenv';
 config();
 const emailConfigs = {
-    gmail: {
-        service: 'gmail',
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS
-        }
-    },
-    outlook: {
-        host: 'smtp-mail.outlook.com',
-        port: 587,
-        secure: false,
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS
-        }
+  gmail: {
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS
     }
+  },
+  outlook: {
+    host: 'smtp-mail.outlook.com',
+    port: 587,
+    secure: false,
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS
+    }
+  }
 };
 const getEmailConfig = () => {
-    const provider = process.env.EMAIL_PROVIDER;
-    const config = emailConfigs[provider];
-    if (!config) {
-        throw new Error(`Email provider '${provider}' not configured`);
-    }
-    return config;
+  const provider = process.env.EMAIL_PROVIDER;
+  const config = emailConfigs[provider];
+  if (!config) {
+    throw new Error(`Email provider '${provider}' not configured`);
+  }
+  return config;
 }
-export const createEmailTransporter=()=>{
-    try{
-        const config=getEmailConfig();
-        const transporter=nodemailer.createTransport(config);
-        transporter.verify((error, success) => {
+export const createEmailTransporter = () => {
+  try {
+    const config = getEmailConfig();
+    const transporter = nodemailer.createTransport(config);
+    transporter.verify((error, success) => {
       if (error) {
         console.error('Email configuration error:', error);
       } else {
@@ -39,10 +39,10 @@ export const createEmailTransporter=()=>{
       }
     });
     return transporter;
-    }catch(error){
-        console.error('Failed to create email transporter:', error);
-        throw error;
-    }
+  } catch (error) {
+    console.error('Failed to create email transporter:', error);
+    throw error;
+  }
 };
 export const emailDefaults = {
   from: process.env.EMAIL_FROM || process.env.EMAIL_USER,
@@ -64,7 +64,7 @@ export const emailTemplates = {
       </div>
     `
   },
-  
+
   welcome: {
     subject: 'Welcome to Our Platform!',
     getHtml: (username) => `

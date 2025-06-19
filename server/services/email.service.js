@@ -1,12 +1,12 @@
 import { createEmailTransporter, emailDefaults, emailTemplates } from "../config/email.js";
 const transporter = createEmailTransporter();
-export const sendPasswordChangeNotification = async (userEmail, userName) => {
+export const sendPasswordChangeNotification = async (userEmail, username) => {
     const template = emailTemplates.passwordChange;
     const mailOptions = {
         from: emailDefaults.from,
         to: userEmail,
         subject: template.subject,
-        html: template.getHtml(userName)
+        html: template.getHtml(username)
     };
     try {
         await transporter.sendMail(mailOptions);
@@ -37,13 +37,13 @@ export const sendWelcomeEmail = async (userEmail, username) => {
         return { success: false, error: error.message };
     }
 };
-export const sendDeleteUser = async (userEmail, userName) => {
+export const sendDeleteUser = async (userEmail, username) => {
     const template = emailTemplates.delete;
     const mailOptions = {
         from: emailDefaults.from,
         to: userEmail,
         subject: template.subject,
-        html: template.getHtml(userName)
+        html: template.getHtml(username)
     };
     try {
         await transporter.sendMail(mailOptions);

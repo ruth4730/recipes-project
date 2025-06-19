@@ -4,6 +4,7 @@ import { config } from 'dotenv';
 import { connectDB } from './config/db.js';
 import morgan from 'morgan';
 import cors from 'cors';
+import { notFound,errorHandler } from './middlewares/errorHandling.middleware.js';
 
 config();
 connectDB();
@@ -20,6 +21,8 @@ app.put('/try/:id',(req,res)=>{
     console.log(req.headers);
     res.send();   
 });
+app.use(notFound);
+app.use(errorHandler);
 const port=process.env.PORT||3000;
 app.listen(port,()=>{
     console.log(`http://localhost:${port}`);   

@@ -2,7 +2,8 @@
   "type": "module",
   "scripts": {
     "start": "node app.js",
-    "dev": "node --watch app.js"
+    "dev": "node --watch app.js",
+    "debug": "node --inspect app.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",

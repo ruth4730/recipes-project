@@ -18,9 +18,9 @@ const userSchema = new Schema({
         match: [/^[\w-\.]+@([\w-]+\.)+(com|net)$/]
     },
     address: {
-        city: String,
-        street: String,
-        house: Number
+        city: { type: String, default: '' },
+        street: { type: String, default: '' },
+        house: { type: Number, default: 0 },
     },
     role: { type: String, enum: ['user', 'admin'], default: 'user' },
 });
@@ -45,8 +45,14 @@ export const JoiUserSchema = {
         email: Joi.string()
             .email()
             .lowercase()
-            .required()
+            .required(),
+        address: Joi.object({
+            city: Joi.string(),
+            street: Joi.string(),
+            house: Joi.number()
+        }),
     }),
+
     login: Joi.object({
         email: Joi.string().lowercase().required(),
         password: Joi.string().required()

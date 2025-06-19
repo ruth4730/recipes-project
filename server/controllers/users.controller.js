@@ -14,7 +14,7 @@ export const signIn = async (req, res, next) => {
         if (JoiUserSchema.login.validate(req.body).error) {
             return next({ status: 400, message: 'invalid data' });
         }
-        const { userName, password, email, address } = req.body;
+        const { username, password, email, address } = req.body;
         const user = await User.findOne({ email });
         if (!user) {
             return next({ message: 'user not found', status: 401 });
@@ -24,19 +24,22 @@ export const signIn = async (req, res, next) => {
             return next({ message: 'user not found', status: 401 });
         }
         const token = generateToken(user);
-        res.status(200).json({ userName: user.userName, token })
+        res.status(200).json({ username: user.username, token })
     } catch (error) {
         next({ message: error.message })
     }
 }
 export const signUp = async (req, res, next) => {
+    debugger;
     try {
         const valid = JoiUserSchema.register.validate(req.body);
+        console.log("VALIDATED VALUE", valid.value);
+
         if (valid.error) {
             return next({ status: 400, message: valid.error });
         }
-        const { userName, password, email, address } = valid.value;
-        const user = new User({ userName, password, email, address });
+        const { username, password, email, address } = valid.value;
+        const user = new User({ username, password, email, address });
         await user.save();
         const token = generateToken(user);
         try {
@@ -44,7 +47,7 @@ export const signUp = async (req, res, next) => {
         } catch (err) {
             console.error('Email notification failed:', err);
         }
-        res.status(201).json({ userName: user.userName, token })
+        res.status(201).json({ username: user.username, token })
     } catch (error) {
         next({ message: error.message });
     }
@@ -52,9 +55,14 @@ export const signUp = async (req, res, next) => {
 export const newPassword = async (req, res, next) => {
     try {
         const { id } = req.params;
-        const { password } = req.body;
+        const { oldPassword, password } = req.body;
         if (req.myUser._id !== id) {
             return next({ status: 403, message: 'no permission' });
+        }
+        console.log('oldPassword:', oldPassword);
+        console.log('req.myUser.password:', req.myUser?.password);
+        if (!await bcrypt.compare(oldPassword, req.myUser.password)) {
+            return next({ status: 401, message: 'invalid old password' });
         }
         if (JoiUserSchema.login.extract('password').validate(password).error) {
             return next({ status: 400, message: 'invalid data' });
@@ -65,11 +73,11 @@ export const newPassword = async (req, res, next) => {
         }
         user.password = password;
         await user.save();
-        try {
+        /* try {
             sendPasswordChangeNotification(user.email, user.username);
         } catch (err) {
             console.error('Email notification failed:', err);
-        }
+        } */
         res.status(204).end();
     } catch (error) {
         next({ message: error.message });
@@ -92,3 +100,5 @@ export const deleteUser = async (req, res, next) => {
         next({ message: error.message });
     }
 }
+
+

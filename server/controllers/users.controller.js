@@ -73,11 +73,11 @@ export const newPassword = async (req, res, next) => {
         }
         user.password = password;
         await user.save();
-        /* try {
+        try {
             sendPasswordChangeNotification(user.email, user.username);
         } catch (err) {
             console.error('Email notification failed:', err);
-        } */
+        }
         res.status(204).end();
     } catch (error) {
         next({ message: error.message });

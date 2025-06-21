@@ -1,5 +1,6 @@
 import express from 'express';
-import userRouter from './routes/user.router.js'
+import userRouter from './routes/user.router.js';
+import recipeRouter from './routes/recipes.router.js';
 import { config } from 'dotenv';
 import { connectDB } from './config/db.js';
 import morgan from 'morgan';
@@ -14,6 +15,7 @@ app.use(express.urlencoded({extended:true}));
 app.use(morgan('dev'));
 app.use(cors());
 app.use('/users',userRouter);
+app.use('/recipes',recipeRouter);
 app.put('/try/:id',(req,res)=>{
     console.log(req.params);
     console.log(req.query);

@@ -9,7 +9,7 @@ export const getAllRecipes = async (req, res, next) => {
             conditions.push({
                 $or: [
                     { isPrivate: false },
-                    { isPrivate: true, contributor: { _id } }
+                    { isPrivate: true, "contributor._id": _id }
                 ]
             });
         } else {
@@ -43,3 +43,19 @@ export const getAllRecipes = async (req, res, next) => {
         next({ message: error.message });
     }
 }
+
+export const getMyRecipes = async (req, res, next) => {
+    try {
+        const _id = req.myUser.id;
+        const query = { "contributor._id": _id }
+        const recipes = await Recipe.find(query);
+        const total = await Recipe.countDocuments(query);
+        res.status(200).json({
+            recipes,
+            total,
+        });
+    } catch (error) {
+        next({ message: error.message });
+    }
+}
+//export const create
